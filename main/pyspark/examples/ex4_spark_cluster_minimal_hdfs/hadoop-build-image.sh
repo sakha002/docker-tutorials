@@ -1,3 +1,4 @@
+#!/bin/bash
 
 TAG=2.0.0-hadoop3.2.0-java8-m
 
