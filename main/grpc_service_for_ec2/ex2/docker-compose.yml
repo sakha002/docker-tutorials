@@ -1,0 +1,15 @@
+version: '2' 
+services:
+    grpc-server:
+        image: grpc-go-server:latest
+        container_name: helloworld_server
+        ports:
+            - 50051:50051
+    
+    grpc-client:
+        image: grpc-go-client:latest
+        container_name: helloworld_client
+        links: 
+            - grpc-server
+        stdin_open: true # docker run -i
+        tty: true        # docker run -t

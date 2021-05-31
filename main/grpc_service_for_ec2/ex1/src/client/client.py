@@ -33,6 +33,8 @@ if __name__ == '__main__':
     else:
         target = '0.0.0.0:5050'
 
+    target = 'ec2-18-232-167-104.compute-1.amazonaws.com:5050'
+
     with grpc.insecure_channel(target) as channel:
         greet(channel, "Bob")
 
