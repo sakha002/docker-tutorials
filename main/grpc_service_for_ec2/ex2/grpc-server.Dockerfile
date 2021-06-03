@@ -33,8 +33,22 @@ RUN go get google.golang.org/grpc@v1.36.0
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o /go/bin/app
 
 
-FROM scratch
+FROM alpine
+
+RUN apk update && apk upgrade && \
+     apk add apache2 && \
+     rm -rf /var/cache/apk/*
+
+
+
+RUN mkdir /var/www/html && echo '<h1> gRPC Service Ready on Port 50051.</h1>' > /var/www/html/index.html 
+# chkconfig httpd on
+
+COPY ./startup.sh .
+RUN chmod +x /startup.sh
 
 COPY --from=build-env /go/bin/app /go/bin/app
-CMD [ "/go/bin/app" ]
-EXPOSE 50051
+
+CMD ["/bin/sh", "./startup.sh" ]
+
+EXPOSE 50051 80

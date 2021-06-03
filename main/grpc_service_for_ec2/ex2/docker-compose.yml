@@ -5,6 +5,7 @@ services:
         container_name: helloworld_server
         ports:
             - 50051:50051
+            - 80:8080
     
     grpc-client:
         image: grpc-go-client:latest
