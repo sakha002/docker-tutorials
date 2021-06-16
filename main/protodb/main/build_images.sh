@@ -1,8 +1,8 @@
 #!/bin/bash
 
-TAG=1.0.0-rocksdbv6.20.3-grpcv1.11.1
+# TAG=1.0.0-rocksdbv6.20.3-grpcv1.11.1
 
-
+TAG=1.0.0
 
 
 build() {
@@ -22,4 +22,5 @@ build() {
 
 # build÷ rocksdb
 # build grpc
-build core
+# build core
+build wrap

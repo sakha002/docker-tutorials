@@ -207,3 +207,56 @@ so questions here:
 okay so for the client (image) the work is not that hard.
 
 the key question is around that CLI options.
+
+
+
+# Failures on Building the ProfaneDB
+
+okay this ProfaneDB created so much headache for me. I guess I need some profanes!
+So it seems it's better if I retreat and regroup on this whole build thing.
+
+Looks like right now I am stuck becasue the installation of grpc image does not properly create the libgrpc++
+(or maybe be there is some other reason that profaneDB can't find grpc --> /usr/bin/ld: cannot find -lgrpc++
+)
+in the lib directory. This is done properly for the later versions like v1.38, but not for 1.11.1 and 1.13.1
+that are needed by the profaneDB. the later versions have some clashes with some proto defenitions in the main repo.
+
+So one question (that I could not solve) was how to build the grpc image so that it creates those libgrpc++
+in the destination directory.
+I see some libgrpc++.a file in the cmake build directory but not sure if that is the final one needed.
+
+(who would be the go to person for this? Alex, Jonny, Eric, Christian)
+
+
+# a bandaid is not that terrible way after all...
+
+
+So looks like i got finally an image that is working like it was supposed to.
+but what was it about?
+so the original image had a CMD argument at the end of it as :
+```
+CMD [ "profanedb_server", "-c /usr/local/etc/profanedb/server.conf" ]
+```
+
+so when I run the image, the container was interpreting the command as:
+```
+profanedb_server " /usr/local/etc/profanedb/server.conf"
+```
+
+and complaining about it. So I saw that you could actually call the image without that specific entry.
+
+https://serverfault.com/questions/594281/how-can-i-override-cmd-when-running-a-docker-image
+
+So with this:
+```
+docker run -it --entrypoint=/bin/bash $IMAGE -i
+```
+
+I could make the image work as it was designed.
+but how can I use this way, to work with other images and docker compose, etc.
+but I guess I could create a wrapper image that just modifies this CMD argument.
+and it works.
+
+I was able to see the server in action and run the test client code.
+
+So I guess got some little win after all this digging.
