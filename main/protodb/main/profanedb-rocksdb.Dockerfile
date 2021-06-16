@@ -15,8 +15,8 @@ RUN apt-get update -y &&                                                \
 #      make -C rocksdb-6.20.3 -j$(nproc) shared_lib &&                     \
 #     make -C rocksdb-6.20.3 install DESTDIR=$INSTALL_PATH
 
-RUN  wget https://github.com/facebook/rocksdb/archive/v5.12.4.tar.gz &&  \
-    tar xzvf v5.12.4.tar.gz &&                                          \
-    make -C rocksdb-5.12.4 -j$(nproc) shared_lib &&                     \
-    make -C rocksdb-5.12.4 install
+RUN  wget https://github.com/facebook/rocksdb/archive/v5.16.6.tar.gz &&  \
+    tar xzvf v5.16.6.tar.gz &&                                          \
+    make -C rocksdb-5.16.6 -j$(nproc) shared_lib &&                     \
+    make -C rocksdb-5.16.6 install
 

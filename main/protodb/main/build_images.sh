@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TAG=1.0.0-rocksdbv6.20.3-grpcv1.38
+TAG=1.0.0-rocksdbv6.20.3-grpcv1.11.1
 
 
 
@@ -20,6 +20,6 @@ build() {
 # build datanode
 # build filebrowser
 
-build rocksdb
+# build÷ rocksdb
 # build grpc
-# build core
+build core

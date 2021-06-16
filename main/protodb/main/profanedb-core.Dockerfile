@@ -49,7 +49,7 @@
 
 # This last step builds ProfaneDB
 
-FROM profanedb-grpc:1.0.0-rocksdbv6.20.3-grpcv1.38 as grpc
+FROM profanedb-grpc:1.0.0-rocksdbv6.20.3-grpcv1.11.1 as grpc
 FROM profanedb-rocksdb:1.0.0-rocksdbv6.20.3-grpcv1.38 as rocksdb
 FROM buildpack-deps AS builder
 
@@ -58,13 +58,25 @@ FROM buildpack-deps AS builder
 # COPY --from=rocksdb /usr/local/lib/librocksdb.a  /usr/local
 
 COPY --from=rocksdb /opt/rocksdb   /usr/local
-COPY --from=grpc    /opt/grpc/      /usr/local
 
+# COPY --from=rocksdb /opt/rocksdb/usr/local/include/rocksdb   /usr/local/rocksdb
+# COPY --from=rocksdb /opt/rocksdb/usr/local/lib   /usr/local/lib
+
+COPY --from=grpc    /opt/grpc/      /usr/local
+# COPY --from=grpc  /grpc/cmake/build  /usr/local
 # ADD . /profanedb
 
-RUN apt-get update -y &&                \
+
+RUN wget https://github.com/Kitware/CMake/archive/refs/tags/v3.7.2.tar.gz && \
+    tar xvzf v3.7.2.tar.gz &&\
+    cd CMake-3.7.2/ && \
+    ./configure && \
+    make && \
+    make install 
+
+RUN  apt-get clean &&  \
+    apt-get update -y &&                \
     apt-get install -y                  \
-        cmake                           \
         libboost-dev                    \
         libboost-filesystem-dev         \
         libboost-log-dev                \
@@ -76,22 +88,35 @@ RUN apt-get update -y &&                \
         liblz4-dev                      \
         libsnappy-dev                   \
         zlib1g-dev                  
+    
+                    
 
 
 RUN git clone --single-branch --branch develop https://gitlab.com/ProfaneDB/ProfaneDB.git && \
+# RUN git clone  https://gitlab.com/ProfaneDB/ProfaneDB.git && \
     mv /ProfaneDB /profanedb
 
 RUN mkdir /profanedb/build &&           \
     cd /profanedb/build &&              \
     cmake                               \
         -D BUILD_PROFANEDB_SERVER=ON    \
-        -D BUILD_TESTS=ON               \
+        -D BUILD_TESTS=OFF               \
         .. &&                           \
     make -j$(nproc) &&                  \
     make install
 
-VOLUME [ "/var/profanedb/schema" ]
+# VOLUME [ "/var/profanedb/schema" ]
 
-CMD [ "profanedb_server", "-c /usr/local/etc/profanedb/server.conf" ]
+# CMD [ "profanedb_server", "-c /usr/local/etc/profanedb/server.conf" ]
+
+# mkdir /profanedb/build &&           \
+# #     cd /profanedb/build &&              \
+#     cmake                               \
+#         -D BUILD_PROFANEDB_SERVER=ON    \
+#         -D BUILD_TESTS=ON               \
+#         .. 
+#     make -j$(nproc) 
+#     make install
 
 
+#15 1.782 -- Found GRPC: /usr/local/lib/libgrpc++.a;/usr/local/lib/libgrpc.a;/usr/local/lib/libgpr.a; plugin - /usr/local/bin/grpc_cpp_plugin
