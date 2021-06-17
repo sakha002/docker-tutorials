@@ -11,11 +11,10 @@ RUN apt-get update -y &&   \
     pkg-config 
 
 ENV MY_INSTALL_DIR /opt/grpc
+ENV prefix /opt/grpc
 
 RUN mkdir /opt/grpc
 
-
-ENV prefix /opt/grpc
 
 
 # RUN git clone -b v1.138.x https://github.com/grpc/grpc &&    \
@@ -78,20 +77,20 @@ ENV prefix /opt/grpc
 
 # RUN apt update &&  apt install bazel 
 
-RUN  git clone --recurse-submodules -b v1.11.1 https://github.com/grpc/grpc
+# RUN  git clone --recurse-submodules -b v1.11.1 https://github.com/grpc/grpc
 
 
-WORKDIR /grpc/cmake/build
-RUN wget https://golang.org/dl/go1.16.5.linux-amd64.tar.gz && \
-    rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.5.linux-amd64.tar.gz &&\
-    export PATH=$PATH:/usr/local/go/bin &&\
-    cmake -DgRPC_INSTALL=ON \
-      -DgRPC_BUILD_TESTS=OFF \
-      -DCMAKE_INSTALL_PREFIX=$MY_INSTALL_DIR \
-      ../.. && \
-    make -j$(nproc) &&                      \
-    make install DESTDIR=$MY_INSTALL_DIR &&                  \
-    make -C third_party/protobuf install prefix=$prefix
+# WORKDIR /grpc/cmake/build
+# RUN wget https://golang.org/dl/go1.16.5.linux-amd64.tar.gz && \
+#     rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.5.linux-amd64.tar.gz &&\
+#     export PATH=$PATH:/usr/local/go/bin &&\
+#     cmake -DgRPC_INSTALL=ON \
+#       -DgRPC_BUILD_TESTS=OFF \
+#       -DCMAKE_INSTALL_PREFIX=$MY_INSTALL_DIR \
+#       ../.. && \
+#     make -j$(nproc) &&                      \
+#     make install DESTDIR=$MY_INSTALL_DIR &&                  \
+#     make -C third_party/protobuf install prefix=$prefix
 
 
 
@@ -103,6 +102,36 @@ RUN wget https://golang.org/dl/go1.16.5.linux-amd64.tar.gz && \
 #       ../.. && \
 #     make -j && \
 #     make install 
+
+
+
+# RUN  mkdir -p /usr/local/grpc 
+# RUN git clone -b v1.15.1 --depth 1 https://github.com/grpc/grpc &&\
+#     cd grpc &&\
+#     git submodule update --init  &&\
+#     wget https://golang.org/dl/go1.16.5.linux-amd64.tar.gz && \
+#     rm -rf /usr/local/go && tar -C /usr/local -xzf go1.16.5.linux-amd64.tar.gz &&\
+#     export PATH=$PATH:/usr/local/go/bin &&\
+#     mkdir -p cmake/build &&\
+#     cd cmake/build &&\
+#     cmake  \
+#         ../..  \
+#         -DgRPC_INSTALL=ON \
+#         -DCMAKE_INSTALL_PREFIX=/usr/local/grpc \
+#         -DCMAKE_BUILD_TYPE=Release \
+#         -DgRPC_ABSL_PROVIDER=module \
+#         -DgRPC_CARES_PROVIDER=module \
+#         -DgRPC_PROTOBUF_PROVIDER=module \
+#         -DgRPC_SSL_PROVIDER=module \
+#         -DgRPC_ZLIB_PROVIDER=module &&\
+#     make &&\
+#     make install &&\
+#     ldconfig  
+
+
+
+
+
 
 
 
