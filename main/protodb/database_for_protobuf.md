@@ -260,3 +260,16 @@ and it works.
 I was able to see the server in action and run the test client code.
 
 So I guess got some little win after all this digging.
+
+
+#Questions on using the profaneDB
+
+so far I have been able to send/receive messages with single int or str Key values.
+
+- what is the way to query for a repeated str (list) as key?
+    - does it mean that the list entirely is Key or each Element is a key?
+    - How you identify that in the Get Request
+    - So many questions around this repeated keys.
+  
+IT IS DONE!
+OFFICIALLY USELESS!
